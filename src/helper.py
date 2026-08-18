@@ -64,7 +64,7 @@ def download_embeddings():
 def setup_pinecone(index_name, embedding):
     pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
 
-    if index_name not in pc.list_indexes().names():
+    if index_name not in [idx.name for idx in pc.list_indexes()]:
         pc.create_index(
             name=index_name,
             dimension=384,
