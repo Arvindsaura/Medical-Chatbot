@@ -5,6 +5,7 @@ Backend powered by Pinecone + Groq LLaMA + LangChain
 """
 
 import os
+import traceback
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 
@@ -79,8 +80,12 @@ def ask():
         return jsonify({"answer": answer})
 
     except Exception as e:
+        # Print full traceback so it appears in Render logs
+        print("=== /ask ERROR ===")
+        traceback.print_exc()
+        print("=== ERROR MSG ===", str(e))
         return jsonify({
-            "answer": "An internal server error occurred.",
+            "answer": f"An internal server error occurred: {str(e)}",
             "error": str(e)
         }), 500
 

@@ -10,6 +10,7 @@ from langchain_pinecone import PineconeVectorStore
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 from langchain_openai import ChatOpenAI
 
 from pinecone import Pinecone
@@ -98,7 +99,6 @@ def load_llm():
 # -------------------------------
 # 6. Create RAG Chain (specialized for CT / pulmonary nodules)
 # -------------------------------
-from langchain_core.runnables import RunnableLambda
 
 def create_rag_chain(vector_store, llm):
 
@@ -115,12 +115,15 @@ def create_rag_chain(vector_store, llm):
     # Truncate each retrieved chunk to avoid HTTP 413 (request too large)
     MAX_CHARS_PER_CHUNK = 600
 
-    def truncate_docs(inputs):
-        docs = inputs.get("context", [])
+    def format_docs(docs):
+        """Format retrieved docs into a single string, truncated per chunk."""
+        parts = []
         for doc in docs:
-            if len(doc.page_content) > MAX_CHARS_PER_CHUNK:
-                doc.page_content = doc.page_content[:MAX_CHARS_PER_CHUNK] + "..."
-        return inputs
+            content = doc.page_content
+            if len(content) > MAX_CHARS_PER_CHUNK:
+                content = content[:MAX_CHARS_PER_CHUNK] + "..."
+            parts.append(content)
+        return "\n\n".join(parts)
 
     template = """You are a friendly, knowledgeable medical AI assistant. Your knowledge comes from comprehensive medical literature and textbooks.
 
@@ -149,7 +152,27 @@ Assistant:"""
         input_variables=["context", "input", "chat_history"]
     )
 
-    qa_chain = create_stuff_documents_chain(llm, prompt)
-    rag_chain = create_retrieval_chain(retriever, qa_chain)
+    # Build a manual chain that correctly passes ALL three keys to the prompt.
+    # create_retrieval_chain only forwards {input} and {context}, dropping
+    # {chat_history} — which causes a KeyError in the PromptTemplate.
+    def run_rag(inputs: dict) -> dict:
+        query = inputs["input"]
+        chat_history = inputs.get("chat_history", "")
 
-    return rag_chain
+        # Retrieve relevant docs
+        docs = retriever.invoke(query)
+        context_str = format_docs(docs)
+
+        # Build and invoke the prompt → LLM
+        filled_prompt = prompt.format(
+            input=query,
+            context=context_str,
+            chat_history=chat_history
+        )
+        result = llm.invoke(filled_prompt)
+
+        # result is an AIMessage; extract text
+        answer = result.content if hasattr(result, "content") else str(result)
+        return {"answer": answer, "context": docs}
+
+    return RunnableLambda(run_rag)
