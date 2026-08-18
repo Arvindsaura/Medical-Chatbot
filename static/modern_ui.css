@@ -2,8 +2,8 @@
 
 /* ── Minimalist Solid Theme ── */
 :root {
-  --font-heading: 'Google Sans', 'Product Sans', 'DM Sans', sans-serif;
-  --font-body: 'Google Sans', 'Product Sans', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Google Sans', sans-serif;
+  --font-body: 'Google Sans', sans-serif;
   
   --spring: linear(0,0.0018,0.0069 1.15%,0.026 2.3%,0.0637,0.1135 5.18%,0.2229 7.78%,0.5977 15.84%,0.7014,0.7904,0.8641,0.9228,0.9676 28.8%,1.0032 31.68%,1.0225,1.0352 36.29%,1.0431 38.88%,1.046 42.05%,1.0448 44.35%,1.0407 47.23%,1.0118 61.63%,1.0025 69.41%,0.9981 80.35%,0.9992 99.94%);
 
@@ -16,7 +16,7 @@
   --text2:      #555555;
   --text3:      #888888;
   
-  --accent:     #000000;
+  --accent:     #0ea5e9;
   --accent-text:#ffffff;
   
   --user-bg:    #f3f4f6;
@@ -39,7 +39,7 @@
   --text2:      #aaaaaa;
   --text3:      #666666;
   
-  --accent:     #ffffff;
+  --accent:     #d4ff00;
   --accent-text:#000000;
   
   --user-bg:    #1a1a1a;

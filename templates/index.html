@@ -10,7 +10,7 @@
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Markdown & Highlighting -->
@@ -63,7 +63,7 @@
 
             <div class="sidebar-footer">
                 <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?name=Medical+User&background=000&color=fff&bold=true" alt="User" id="user-avatar-img">
+                    <img src="https://ui-avatars.com/api/?name=Medical+User&background=0ea5e9&color=fff&bold=true" alt="User" id="user-avatar-img">
                     <div class="user-info">
                         <span class="user-name">Medical User</span>
                         <span class="user-status">● Online</span>
@@ -146,7 +146,7 @@
         chatApp.toggleTheme = function() {
             originalToggle();
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            const bg = isDark ? 'fff' : '000';
+            const bg = isDark ? 'd4ff00' : '0ea5e9';
             const color = isDark ? '000' : 'fff';
             document.getElementById('user-avatar-img').src = `https://ui-avatars.com/api/?name=Medical+User&background=${bg}&color=${color}&bold=true`;
         }
