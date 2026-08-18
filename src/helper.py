@@ -4,7 +4,7 @@
 import os
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
+from langchain_community.embeddings import FastEmbedEmbeddings
 
 from langchain_pinecone import PineconeVectorStore
 from langchain.chains import create_retrieval_chain
@@ -47,12 +47,10 @@ def text_split(documents):
 # 3. Download Embeddings
 # -------------------------------
 def download_embeddings():
-    # Uses HuggingFace Inference API (remote) instead of loading the model locally.
-    # This avoids OOM crashes on Render's 512MB free tier.
-    embeddings = HuggingFaceInferenceAPIEmbeddings(
-        api_key=os.getenv("HUGGINGFACEHUB_API_TOKEN"),
-        model_name="BAAI/bge-small-en-v1.5"
-    )
+    # FastEmbed runs BAAI/bge-small-en-v1.5 locally via ONNX runtime.
+    # Much lighter than sentence-transformers (no PyTorch), and no outbound
+    # HTTP calls needed — works on Render's free tier (512MB RAM).
+    embeddings = FastEmbedEmbeddings(model_name="BAAI/bge-small-en-v1.5")
     return embeddings
 
 
