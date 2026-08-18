@@ -88,11 +88,19 @@ class MedPulseApp {
         this.handleInput(); // Reset height
         this.setLoading(true);
 
+        // 2. Build conversation history (last 3 turns = 6 messages)
+        const currentChat = this.chats.find(c => c.id === this.currentChatId);
+        const recentMessages = currentChat ? currentChat.messages.slice(-6) : [];
+        const history = recentMessages.map(m => ({
+            role: m.role === 'bot' ? 'assistant' : 'user',
+            content: m.content
+        }));
+
         try {
             const response = await fetch('/ask', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query: query })
+                body: JSON.stringify({ query: query, history: history })
             });
 
             const data = await response.json();
@@ -149,12 +157,6 @@ class MedPulseApp {
             <div class="msg-actions">
                 <button class="action-btn" onclick="chatApp.copyToClipboard(this)">
                     <i class="fas fa-copy"></i> Copy
-                </button>
-                <button class="action-btn">
-                    <i class="fas fa-rotate"></i> Regenerate
-                </button>
-                <button class="action-btn">
-                    <i class="fas fa-bookmark"></i> Save
                 </button>
             </div>
         `;
@@ -322,9 +324,6 @@ class MedPulseApp {
             setTimeout(() => btn.innerHTML = original, 2000);
         });
     }
-
-    exportAsPDF() { alert("Clinical PDF Export generated (Simulation)"); }
-    shareChat() { alert("Encrypted consultation link copied to clipboard (Simulation)"); }
 }
 
 // Global instance

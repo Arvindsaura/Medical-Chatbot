@@ -85,65 +85,67 @@ def setup_pinecone(index_name, embedding):
 
 def load_llm():
     llm = ChatOpenAI(
-        model="llama-3.3-70b-versatile",
+        model="groq/compound-mini",
         openai_api_key=os.getenv("GROQ_API_KEY"),
         openai_api_base="https://api.groq.com/openai/v1",
-        temperature=0.2,
+        temperature=0.4,
         max_tokens=800,
+        max_retries=0,
     )
     return llm
 
 # -------------------------------
 # 6. Create RAG Chain (specialized for CT / pulmonary nodules)
 # -------------------------------
+from langchain_core.runnables import RunnableLambda
+
 def create_rag_chain(vector_store, llm):
 
     # MMR retriever: balances relevance + diversity across retrieved chunks
     retriever = vector_store.as_retriever(
         search_type="mmr",
         search_kwargs={
-            "k": 5,
-            "fetch_k": 10,
+            "k": 3,
+            "fetch_k": 6,
             "lambda_mult": 0.7,
         }
     )
 
-    template = """You are a specialist AI radiology assistant focused exclusively on **CT scan analysis and pulmonary nodule detection**.
+    # Truncate each retrieved chunk to avoid HTTP 413 (request too large)
+    MAX_CHARS_PER_CHUNK = 600
 
-Your expertise includes:
-- Interpreting CT scan findings related to lung nodules (solid, sub-solid, ground-glass opacity)
-- Lung-RADS classification and risk stratification
-- Fleischner Society guidelines for incidental pulmonary nodule management
-- Nodule morphology analysis (size, shape, margins, density, calcification patterns)
-- Differential diagnosis of pulmonary nodules (benign vs malignant indicators)
-- Follow-up imaging recommendations based on nodule characteristics
-- TNM staging considerations when malignancy is suspected
-- Associated findings (lymphadenopathy, pleural effusion, emphysema)
+    def truncate_docs(inputs):
+        docs = inputs.get("context", [])
+        for doc in docs:
+            if len(doc.page_content) > MAX_CHARS_PER_CHUNK:
+                doc.page_content = doc.page_content[:MAX_CHARS_PER_CHUNK] + "..."
+        return inputs
 
-RULES:
+    template = """You are a friendly, knowledgeable medical AI assistant. Your knowledge comes from comprehensive medical literature and textbooks.
 
-1. Prioritize the retrieved context as the primary source of truth.
-2. If the retrieved context is insufficient BUT the question is still within pulmonary CT imaging scope, you may use general medical radiology knowledge.
-3. Clearly distinguish your reasoning using:
-   - "Based on retrieved context:"
-   - "Based on general radiology knowledge:"
-4. If the question is unrelated to CT scans or lung imaging, redirect briefly in one sentence.
-5. Provide structured, concise, clinical responses.
-6. Avoid unnecessary repetition.
-7. Always include a short informational disclaimer.
+BEHAVIOR RULES:
 
-Context:
+1. **Casual greetings** ("hi", "hello", "how are you", etc.): Respond naturally and briefly like a friendly assistant. Example: "Hello! How can I help you today? Feel free to ask me any health or medical questions."
+2. **Medical questions**: Use the retrieved context first; supplement with general medical knowledge if needed.
+3. **Non-medical, non-greeting inputs**: Politely steer back toward health topics in one short sentence.
+4. Keep responses concise and easy to understand. Do NOT show your reasoning or thinking steps.
+5. For medical answers only: add a brief disclaimer that responses are informational and not a substitute for professional advice.
+6. **Follow-up questions**: If the user refers to something mentioned earlier (e.g., "the above", "that condition", "those vegetables"), use the conversation history below to understand what they mean.
+
+Previous conversation:
+{chat_history}
+
+Context from medical literature:
 {context}
 
-Patient Query / Clinical Question:
+User:
 {input}
 
-Specialist Assessment:
-"""
+Assistant:"""
 
     prompt = PromptTemplate(
         template=template,
-        input_variables=["context", "input"]
+        input_variables=["context", "input", "chat_history"]
     )
 
     qa_chain = create_stuff_documents_chain(llm, prompt)

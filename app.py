@@ -58,12 +58,22 @@ def ask():
     try:
         data = request.get_json()
         user_query = data.get("query", "").strip()
+        history = data.get("history", [])  # list of {role, content} dicts
 
         if not user_query:
             return jsonify({"answer": "Please enter a valid query."}), 400
 
-        # Invoke RAG chain
-        response = rag_chain.invoke({"input": user_query})
+        # Build a readable conversation history string for the prompt
+        history_text = ""
+        for turn in history:
+            role_label = "User" if turn["role"] == "user" else "Assistant"
+            history_text += f"{role_label}: {turn['content']}\n"
+
+        # Invoke RAG chain with history context
+        response = rag_chain.invoke({
+            "input": user_query,
+            "chat_history": history_text.strip()
+        })
         answer = response.get("answer", "No response generated.")
 
         return jsonify({"answer": answer})
@@ -77,4 +87,5 @@ def ask():
 
 # ── Run App ─────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    app.run(debug=False)
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
