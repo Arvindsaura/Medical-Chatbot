@@ -4,7 +4,7 @@
 import os
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEndpointEmbeddings
+from langchain_community.embeddings import FastEmbedEmbeddings
 
 from langchain_pinecone import PineconeVectorStore
 from langchain.chains import create_retrieval_chain
@@ -48,13 +48,9 @@ def text_split(documents):
 # 3. Download Embeddings
 # -------------------------------
 def download_embeddings():
-    # Uses HuggingFace Inference API — no local model download, zero RAM overhead.
-    # This fixes the OOM crash on Render's free tier (512MB limit).
-    # FastEmbedEmbeddings was downloading ~130MB ONNX model on every cold start.
-    embeddings = HuggingFaceEndpointEmbeddings(
-        model="BAAI/bge-small-en-v1.5",
-        huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_TOKEN"),
-    )
+    # FastEmbed uses a lightweight ONNX runtime (~67MB model, no PyTorch).
+    # Works on Render free tier (512MB RAM).
+    embeddings = FastEmbedEmbeddings(model_name="BAAI/bge-small-en-v1.5")
     return embeddings
 
 
