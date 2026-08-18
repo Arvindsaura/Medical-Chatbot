@@ -2,8 +2,8 @@
 
 /* ── Minimalist Solid Theme ── */
 :root {
-  --font-heading: 'Montserrat', sans-serif;
-  --font-body: 'Google Sans', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Google Sans', 'Product Sans', 'DM Sans', sans-serif;
+  --font-body: 'Google Sans', 'Product Sans', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   
   --spring: linear(0,0.0018,0.0069 1.15%,0.026 2.3%,0.0637,0.1135 5.18%,0.2229 7.78%,0.5977 15.84%,0.7014,0.7904,0.8641,0.9228,0.9676 28.8%,1.0032 31.68%,1.0225,1.0352 36.29%,1.0431 38.88%,1.046 42.05%,1.0448 44.35%,1.0407 47.23%,1.0118 61.63%,1.0025 69.41%,0.9981 80.35%,0.9992 99.94%);
 
@@ -26,7 +26,7 @@
   --shadow-float: 0 8px 24px rgba(0,0,0,0.08);
   
   --danger:     #dc2626;
-  --sidebar-w:  260px;
+  --sidebar-w:  300px;
   --hdr:        60px;
 }
 
@@ -221,6 +221,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); }
 
 .suggested-prompts { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 460px; }
 .suggested-prompts button {
+  display: flex; align-items: center; gap: 10px;
   padding: 14px 20px; text-align: left;
   background: var(--bg); border: 1px solid var(--border);
   border-radius: 8px; color: var(--text);
