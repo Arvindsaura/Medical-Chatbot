@@ -86,11 +86,11 @@ def setup_pinecone(index_name, embedding):
 
 def load_llm():
     llm = ChatOpenAI(
-        model="groq/compound",
+        model="groq/compound-mini",
         openai_api_key=os.getenv("GROQ_API_KEY"),
         openai_api_base="https://api.groq.com/openai/v1",
         temperature=0.4,
-        max_tokens=800,
+        max_tokens=512,
         max_retries=0,
     )
     return llm
