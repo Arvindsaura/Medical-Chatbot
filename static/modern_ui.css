@@ -538,6 +538,9 @@ body {
     cursor: pointer;
     font-size: 0.85rem;
     transition: 0.2s;
+    text-decoration: none;
+    color: var(--text-main);
+    margin-bottom: 4px;
 }
 
 .ref-link:hover { background: var(--bg-app); color: var(--primary); }

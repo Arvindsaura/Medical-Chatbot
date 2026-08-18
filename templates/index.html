@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedPulse AI | Advanced Clinical Intelligence</title>
-    
+    <title>MedPulse AI | Medical Knowledge Assistant</title>
+    <meta name="description" content="MedPulse AI — an intelligent medical assistant powered by comprehensive medical literature to answer your health and disease questions.">
+
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Markdown & Highlighting -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
@@ -18,6 +22,7 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='modern_ui.css') }}">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Overlay for Mobile Sidebar -->
@@ -34,12 +39,13 @@
             </div>
 
             <button class="btn-new-chat" onclick="chatApp.createNewChat()">
-                <i class="fas fa-plus"></i> New Consultation
+                <i class="fas fa-plus"></i> New Chat
             </button>
 
             <div class="search-container">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" id="chat-search" placeholder="Search history..." oninput="chatApp.filterChats(this.value)">
+                <input type="text" id="chat-search" placeholder="Search history..."
+                    oninput="chatApp.filterChats(this.value)">
             </div>
 
             <nav class="chat-history">
@@ -59,18 +65,15 @@
 
             <div class="sidebar-footer">
                 <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?name=Medical+Professional&background=0D9488&color=fff" alt="User">
+                    <img src="https://ui-avatars.com/api/?name=Medical+User&background=0D9488&color=fff" alt="User">
                     <div class="user-info">
-                        <span class="user-name">Clinical User</span>
-                        <span class="user-status">On Duty</span>
+                        <span class="user-name">Medical User</span>
+                        <span class="user-status">Active</span>
                     </div>
                 </div>
                 <div class="footer-actions">
                     <button class="theme-toggle" onclick="chatApp.toggleTheme()" title="Toggle Theme">
                         <i class="fas fa-moon"></i>
-                    </button>
-                    <button class="settings-btn" title="Settings">
-                        <i class="fas fa-cog"></i>
                     </button>
                 </div>
             </div>
@@ -82,19 +85,13 @@
             <header class="app-header">
                 <div class="header-left">
                     <button id="open-sidebar" class="mobile-only-btn"><i class="fas fa-bars"></i></button>
-                    <h2 id="current-chat-title">New Consultation</h2>
+                    <h2 id="current-chat-title">Medical Assistant</h2>
                 </div>
                 <div class="header-right">
                     <div class="model-badge">
                         <span class="status-dot"></span>
-                        LLaMA 3.3 Clinical
+                        Groq · Medical AI
                     </div>
-                    <button class="btn-icon" title="Export PDF" onclick="chatApp.exportAsPDF()">
-                        <i class="fas fa-file-pdf"></i>
-                    </button>
-                    <button class="btn-icon" title="Share" onclick="chatApp.shareChat()">
-                        <i class="fas fa-share-nodes"></i>
-                    </button>
                 </div>
             </header>
 
@@ -103,18 +100,18 @@
                 <!-- Welcome / Empty State -->
                 <div id="empty-state" class="empty-state">
                     <div class="empty-icon"><i class="fas fa-heart-pulse"></i></div>
-                    <h1>How can I assist your clinical workflow today?</h1>
-                    <p>Access patient records, analyze CT results, or consult medical guidelines in seconds.</p>
-                    
+                    <h1>What medical question can I help you with?</h1>
+                    <p>Ask about diseases, symptoms, treatments, medications, or general health topics.</p>
+
                     <div class="suggested-prompts">
-                        <button onclick="chatApp.sendQuickPrompt('Analyze symptoms of recurring pulmonary nodules')">
-                            🩺 Pulmonary Nodule Signs
+                        <button onclick="chatApp.sendQuickPrompt('What are the common symptoms of diabetes mellitus?')">
+                            🩺 Diabetes Symptoms
                         </button>
-                        <button onclick="chatApp.sendQuickPrompt('What are the Fleischner Society follow-up guidelines?')">
-                            📄 Fleischner Guidelines
+                        <button onclick="chatApp.sendQuickPrompt('Explain the treatment options for hypertension')">
+                            💊 Hypertension Treatment
                         </button>
-                        <button onclick="chatApp.sendQuickPrompt('Differential diagnosis for ground-glass opacity')">
-                            🔍 GGO Diagnosis
+                        <button onclick="chatApp.sendQuickPrompt('What is the differential diagnosis for acute chest pain?')">
+                            🔍 Chest Pain Diagnosis
                         </button>
                     </div>
                 </div>
@@ -130,21 +127,13 @@
             <!-- Footer / Input Area -->
             <footer class="input-area">
                 <div class="input-container">
-                    <div class="input-actions-left">
-                        <button class="btn-icon-alt" title="Upload Scan">
-                            <i class="fas fa-paperclip"></i>
-                        </button>
-                        <button class="btn-icon-alt" title="Voice Input">
-                            <i class="fas fa-microphone"></i>
-                        </button>
-                    </div>
-                    <textarea id="user-input" placeholder="Type clinical findings or ask a question..." rows="1"></textarea>
+                    <textarea id="user-input" placeholder="Ask a medical or health question..." rows="1"></textarea>
                     <button id="send-btn" class="send-btn" disabled>
                         <i class="fas fa-arrow-up"></i>
                     </button>
                 </div>
                 <p class="disclaimer">
-                    MedPulse AI provides clinical assistance based on medical literature. Always verify with qualified specialists.
+                    MedPulse AI provides information from medical literature. Always consult a qualified healthcare professional for personal medical advice.
                 </p>
             </footer>
         </main>
@@ -158,29 +147,33 @@
                         <i class="fas fa-tag"></i> Key Topics
                     </div>
                     <div class="tag-cloud" id="key-topics">
-                        <span>CT Scan</span>
-                        <span>Pulmonary</span>
-                        <span>Nodules</span>
+                        <span>Symptoms</span>
+                        <span>Diseases</span>
+                        <span>Treatments</span>
                     </div>
                 </div>
             </div>
 
             <div class="panel-section">
                 <h3>Quick References</h3>
-                <div class="ref-link">
+                <a class="ref-link" href="https://www.who.int/health-topics" target="_blank" rel="noopener">
+                    <i class="fas fa-globe"></i>
+                    <span>WHO Health Topics</span>
+                </a>
+                <a class="ref-link" href="https://medlineplus.gov/" target="_blank" rel="noopener">
                     <i class="fas fa-book-medical"></i>
-                    <span>Lung-RADS Classification</span>
-                </div>
-                <div class="ref-link">
-                    <i class="fas fa-book-medical"></i>
-                    <span>Solitary Pulmonary Nodule Plan</span>
-                </div>
+                    <span>MedlinePlus Encyclopedia</span>
+                </a>
+                <a class="ref-link" href="https://www.nhs.uk/conditions/" target="_blank" rel="noopener">
+                    <i class="fas fa-hospital"></i>
+                    <span>NHS Conditions A–Z</span>
+                </a>
             </div>
 
             <div class="panel-section risk-indicator">
                 <div class="risk-card">
-                    <h4>Clinical Risk Awareness</h4>
-                    <p>Critical findings like "spiculated margins" or "lymphadenopathy" will be highlighted automatically.</p>
+                    <h4>⚠️ Important Notice</h4>
+                    <p>This assistant provides general medical information only. It is <strong>not</strong> a substitute for professional medical diagnosis or treatment.</p>
                 </div>
             </div>
         </aside>
@@ -189,4 +182,5 @@
     <!-- UI Logic -->
     <script src="{{ url_for('static', filename='app_logic.js') }}"></script>
 </body>
+
 </html>
