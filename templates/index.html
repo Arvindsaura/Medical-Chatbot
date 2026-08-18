@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -10,9 +10,7 @@
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Markdown & Highlighting -->
@@ -28,7 +26,7 @@
         <!-- Overlay for Mobile Sidebar -->
         <div id="sidebar-overlay" class="overlay"></div>
 
-        <!-- Sidebar Navigation -->
+        <!-- Sidebar -->
         <aside class="sidebar" id="main-sidebar">
             <div class="sidebar-header">
                 <div class="logo">
@@ -58,23 +56,18 @@
                     <div class="history-list" id="list-yesterday"></div>
                 </div>
                 <div class="history-section" id="section-older">
-                    <h3>Previous Sessions</h3>
+                    <h3>Previous</h3>
                     <div class="history-list" id="list-older"></div>
                 </div>
             </nav>
 
             <div class="sidebar-footer">
                 <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?name=Medical+User&background=0D9488&color=fff" alt="User">
+                    <img src="https://ui-avatars.com/api/?name=Medical+User&background=4fffb0&color=080c14&bold=true" alt="User">
                     <div class="user-info">
                         <span class="user-name">Medical User</span>
-                        <span class="user-status">Active</span>
+                        <span class="user-status">● Online</span>
                     </div>
-                </div>
-                <div class="footer-actions">
-                    <button class="theme-toggle" onclick="chatApp.toggleTheme()" title="Toggle Theme">
-                        <i class="fas fa-moon"></i>
-                    </button>
                 </div>
             </div>
         </aside>
@@ -97,11 +90,11 @@
 
             <!-- Chat Area -->
             <div id="chat-viewport" class="chat-viewport">
-                <!-- Welcome / Empty State -->
+                <!-- Welcome State -->
                 <div id="empty-state" class="empty-state">
                     <div class="empty-icon"><i class="fas fa-heart-pulse"></i></div>
-                    <h1>What medical question can I help you with?</h1>
-                    <p>Ask about diseases, symptoms, treatments, medications, or general health topics.</p>
+                    <h1>What can I help you with?</h1>
+                    <p>Ask about diseases, symptoms, treatments, medications, or any health topic.</p>
 
                     <div class="suggested-prompts">
                         <button onclick="chatApp.sendQuickPrompt('What are the common symptoms of diabetes mellitus?')">
@@ -117,6 +110,7 @@
                 </div>
 
                 <div id="message-container" class="message-container"></div>
+
                 <div id="typing-indicator" class="typing-indicator hidden">
                     <div class="dot"></div>
                     <div class="dot"></div>
@@ -124,62 +118,21 @@
                 </div>
             </div>
 
-            <!-- Footer / Input Area -->
+            <!-- Input Area -->
             <footer class="input-area">
                 <div class="input-container">
-                    <textarea id="user-input" placeholder="Ask a medical or health question..." rows="1"></textarea>
+                    <textarea id="user-input" placeholder="Ask a medical question…" rows="1"></textarea>
                     <button id="send-btn" class="send-btn" disabled>
                         <i class="fas fa-arrow-up"></i>
                     </button>
                 </div>
                 <p class="disclaimer">
-                    MedPulse AI provides information from medical literature. Always consult a qualified healthcare professional for personal medical advice.
+                    MedPulse AI provides information from medical literature. Always consult a qualified healthcare professional.
                 </p>
             </footer>
         </main>
-
-        <!-- Right Insights Panel (Desktop Only) -->
-        <aside class="insights-panel">
-            <div class="panel-section">
-                <h3>Session Insights</h3>
-                <div class="insight-card">
-                    <div class="insight-header">
-                        <i class="fas fa-tag"></i> Key Topics
-                    </div>
-                    <div class="tag-cloud" id="key-topics">
-                        <span>Symptoms</span>
-                        <span>Diseases</span>
-                        <span>Treatments</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel-section">
-                <h3>Quick References</h3>
-                <a class="ref-link" href="https://www.who.int/health-topics" target="_blank" rel="noopener">
-                    <i class="fas fa-globe"></i>
-                    <span>WHO Health Topics</span>
-                </a>
-                <a class="ref-link" href="https://medlineplus.gov/" target="_blank" rel="noopener">
-                    <i class="fas fa-book-medical"></i>
-                    <span>MedlinePlus Encyclopedia</span>
-                </a>
-                <a class="ref-link" href="https://www.nhs.uk/conditions/" target="_blank" rel="noopener">
-                    <i class="fas fa-hospital"></i>
-                    <span>NHS Conditions A–Z</span>
-                </a>
-            </div>
-
-            <div class="panel-section risk-indicator">
-                <div class="risk-card">
-                    <h4>⚠️ Important Notice</h4>
-                    <p>This assistant provides general medical information only. It is <strong>not</strong> a substitute for professional medical diagnosis or treatment.</p>
-                </div>
-            </div>
-        </aside>
     </div>
 
-    <!-- UI Logic -->
     <script src="{{ url_for('static', filename='app_logic.js') }}"></script>
 </body>
 
