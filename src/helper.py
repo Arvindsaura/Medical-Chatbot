@@ -86,9 +86,9 @@ def setup_pinecone(index_name, embedding):
 
 def load_llm():
     llm = ChatOpenAI(
-        model="groq/compound-mini",
-        openai_api_key=os.getenv("GROQ_API_KEY"),
-        openai_api_base="https://api.groq.com/openai/v1",
+        model="nvidia/nemotron-3-super-120b-a12b:free",
+        openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+        openai_api_base="https://openrouter.ai/api/v1",
         temperature=0.4,
         max_tokens=512,
         max_retries=0,

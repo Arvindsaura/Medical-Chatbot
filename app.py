@@ -1,7 +1,7 @@
 """
 Medical Chatbot — Flask Web App
 CT Scan & Pulmonary Nodule Detection Specialist
-Backend powered by Pinecone + Groq LLaMA + LangChain
+Backend powered by Pinecone + OpenRouter (gpt-oss-120b) + LangChain
 """
 
 import os
@@ -36,7 +36,7 @@ vector_store = setup_pinecone(
     embedding=embedding
 )
 
-print("🔹 Loading LLM (Groq)...")
+print("🔹 Loading LLM (OpenRouter gpt-oss-120b)...")
 llm = load_llm()
 
 print("🔹 Building RAG chain...")
